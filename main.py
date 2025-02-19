@@ -1,8 +1,7 @@
 from turtle import Screen
 from functools import partial
-import time
-
 from spaceship import Spaceship
+import time
 
 class SpaceInvadersGame():
     def __init__(self):
@@ -14,13 +13,8 @@ class SpaceInvadersGame():
         self._screen.tracer(0)
 
         self._spaceship = Spaceship()
+        self.set_keys_listeners()
 
-         # Listen to key events
-        self._screen.listen()
-        self._screen.onkeypress(partial(self._spaceship.move, "up"), "Up")
-        self._screen.onkeypress(partial(self._spaceship.move, "down"), "Down")
-        self._screen.onkeypress(partial(self._spaceship.move, "left"), "Left")
-        self._screen.onkeypress(partial(self._spaceship.move, "right"), "Right")
 
     def run(self):
         self._screen.listen()
@@ -28,10 +22,19 @@ class SpaceInvadersGame():
         
         while self._game_is_on:
             self._screen.update()
+            time.sleep(0.1)
+            self._spaceship.move_bullets()
             
         
         self._screen.exitonclick()
 
+    def set_keys_listeners(self):        
+        self._screen.listen()
+        self._screen.onkeypress(partial(self._spaceship.move, "up"), "Up")
+        self._screen.onkeypress(partial(self._spaceship.move, "down"), "Down")
+        self._screen.onkeypress(partial(self._spaceship.move, "left"), "Left")
+        self._screen.onkeypress(partial(self._spaceship.move, "right"), "Right")
+        self._screen.onkey(self._spaceship.shoot, "space")
 
 if __name__ == '__main__':
     space_invaders = SpaceInvadersGame()
