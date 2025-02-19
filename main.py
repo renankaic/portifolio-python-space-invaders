@@ -1,5 +1,6 @@
 from turtle import Screen
 from spaceship import Spaceship
+from invader import Invader
 import time
 
 class SpaceInvadersGame():
@@ -9,14 +10,34 @@ class SpaceInvadersGame():
         self._screen.bgcolor('black')
         self._screen.title('Space Invaders')
         self._screen.register_shape('spaceship.gif')
+        self._screen.register_shape('invader.gif')
         self._screen.tracer(0)
 
-        self._spaceship = Spaceship()
+        self._spaceship = Spaceship(shape='spaceship.gif')
         self.set_keys_listeners()
+
+        self._invaders = []
+       
 
     def run(self):
         self._screen.listen()
         self._game_is_on = True
+
+        for n in range (40):
+            if n < 10:
+                start_position = (-330 + n * 50, 250)
+            elif n < 20:
+                n -= 10
+                start_position = (-330 + n * 50, 200)
+            elif n < 30:
+                n -= 20
+                start_position = (-330 + n * 50, 150)
+            else:
+                n -= 30
+                start_position = (-330 + n * 50, 100)
+
+            invader = Invader(start_position)
+            self._invaders.append(invader)
         
         while self._game_is_on:
             self._screen.update()

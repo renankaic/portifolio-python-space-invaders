@@ -1,10 +1,11 @@
 from turtle import Turtle
 STARTING_POSITION = (0, -270)
 MOVE_DISTANCE = 25
+SHAPE = 'spaceship.gif'
 
 class Spaceship(Turtle):
-    def __init__(self):
-        super().__init__(shape='spaceship.gif', undobuffersize=1000, visible=True)
+    def __init__(self, shape=SHAPE, undobuffersize = 1000, visible = True):
+        super().__init__(shape, undobuffersize, visible)
         self.penup()
         self.color("white")
         self.goto(STARTING_POSITION)
