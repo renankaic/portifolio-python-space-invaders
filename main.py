@@ -2,6 +2,7 @@ from turtle import Screen
 from spaceship import Spaceship
 from invader import Invader
 import time
+import os
 
 from utils import Direction
 
@@ -10,22 +11,24 @@ class SpaceInvadersGame():
         self._screen = Screen()
         self._screen.setup(width=800, height=600)
         self._screen.bgcolor('black')
-        self._screen.title('Space Invaders')
-        self._screen.register_shape('spaceship.gif')
-        self._screen.register_shape('invader.gif')
+        self._screen.title('Space Invaders')                
         self._screen.tracer(0)
 
+        self._screen.register_shape('spaceship.gif')
         self._spaceship = Spaceship(shape='spaceship.gif')
         self.set_keys_listeners()
 
         self._invaders = []
         self._invaders_last_move = 0
         self._invaders_current_move_direction = Direction.RIGHT
-       
+
+        for invader_gif_filename in os.listdir('assets/img/invader_frames'):
+          self._screen.register_shape(f'assets/img/invader_frames/{invader_gif_filename}')
 
     def run(self):
         self._screen.listen()
         self._game_is_on = True
+        self._loop_count = 0
 
         for n in range (40):
             if n < 10:
@@ -40,7 +43,8 @@ class SpaceInvadersGame():
                 n -= 30
                 start_position = (-330 + n * 50, 100)
 
-            invader = Invader(start_position)
+            invader = Invader(starting_position=start_position)
+
             if len(self._invaders) <= n // 10:
                 self._invaders.append([])
             self._invaders[n // 10].append(invader)
@@ -50,6 +54,14 @@ class SpaceInvadersGame():
             time.sleep(0.025)  # Reduce sleep duration for smoother performance
             self._spaceship.move_bullets()
             self.move_invaders()
+
+            if self._loop_count % 25 == 0:
+                for row in self._invaders:
+                    for invader in row:
+                        invader.change_shape()
+                self._loop_count = 0
+
+            self._loop_count += 1
         
         self._screen.exitonclick()
    

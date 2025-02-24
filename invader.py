@@ -3,7 +3,7 @@ from turtle import Turtle
 from utils import Direction
 
 MOVE_DISTANCE = 20
-SHAPE = "invader.gif"
+SHAPE = "assets/img/invader_frames/invader-1.gif"
 
 
 class Invader(Turtle):
@@ -21,7 +21,7 @@ class Invader(Turtle):
         self.setheading(270)
         self.shapesize(stretch_wid=1, stretch_len=1)
         self.speed("fastest")
-        self._bullets = []
+        self._bullets = []        
 
     def move(self, direction: Direction):
         if direction == Direction.RIGHT:
@@ -30,3 +30,18 @@ class Invader(Turtle):
             self.setx(self.xcor() - MOVE_DISTANCE)
         elif direction == Direction.DOWN:
             self.sety(self.ycor() - MOVE_DISTANCE)
+    
+    def change_shape(self):
+        if self.shape() == "assets/img/invader_frames/invader-1.gif":
+            self.shape("assets/img/invader_frames/invader-2.gif")
+        elif self.shape() == "assets/img/invader_frames/invader-2.gif":
+            self.shape("assets/img/invader_frames/invader-3.gif")
+        elif self.shape() == "assets/img/invader_frames/invader-3.gif":
+            self.shape("assets/img/invader_frames/invader-4.gif")
+        elif self.shape() == "assets/img/invader_frames/invader-4.gif":
+            self.shape("assets/img/invader_frames/invader-5.gif")
+        elif self.shape() == "assets/img/invader_frames/invader-5.gif":
+            self.shape("assets/img/invader_frames/invader-6.gif")
+        elif self.shape() == "assets/img/invader_frames/invader-6.gif":
+            self.shape("assets/img/invader_frames/invader-1.gif")
+
