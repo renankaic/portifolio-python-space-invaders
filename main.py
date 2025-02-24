@@ -30,6 +30,7 @@ class SpaceInvadersGame():
         self._game_is_on = True
         self._loop_count = 0
 
+        # Create 40 invaders        
         for n in range (40):
             if n < 10:
                 start_position = (-330 + n * 50, 250)
@@ -45,8 +46,11 @@ class SpaceInvadersGame():
 
             invader = Invader(starting_position=start_position)
 
+            # Create a new row of invaders every 10 invaders
             if len(self._invaders) <= n // 10:
                 self._invaders.append([])
+
+            # Add the invader to the last row
             self._invaders[n // 10].append(invader)
         
         while self._game_is_on:
@@ -55,6 +59,7 @@ class SpaceInvadersGame():
             self._spaceship.move_bullets()
             self.move_invaders()
 
+            # Change invader shape every 25 loops
             if self._loop_count % 25 == 0:
                 for row in self._invaders:
                     for invader in row:
@@ -105,6 +110,8 @@ class SpaceInvadersGame():
             for row in self._invaders:
                 for invader in row:
                     invader.move(self._invaders_current_move_direction)
+
+                    # Move invaders down if they reach the edge
                     if reached_edge:
                         invader.move(Direction.DOWN)
                 
