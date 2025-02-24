@@ -64,6 +64,7 @@ class SpaceInvadersGame():
     def move_invaders(self):
         if self._invaders_last_move == 10:
             row_with_last_invader = None
+            reached_edge = False
 
             if self._invaders_current_move_direction == Direction.RIGHT:
               # Check if the last invader in the row is at the right edge of the screen
@@ -75,6 +76,7 @@ class SpaceInvadersGame():
               if row_with_last_invader is not None:
                 if row_with_last_invader[-1].xcor() >= 380:
                   self._invaders_current_move_direction = Direction.LEFT
+                  reached_edge = True
 
             elif self._invaders_current_move_direction == Direction.LEFT:
               # Check if the last invader in the row is at the left edge of the screen
@@ -86,10 +88,13 @@ class SpaceInvadersGame():
               if row_with_last_invader is not None:
                 if row_with_last_invader[0].xcor() <= -380:
                   self._invaders_current_move_direction = Direction.RIGHT
+                  reached_edge = True
 
             for row in self._invaders:
                 for invader in row:
                     invader.move(self._invaders_current_move_direction)
+                    if reached_edge:
+                        invader.move(Direction.DOWN)
                 
             self._invaders_last_move = 0
         else:

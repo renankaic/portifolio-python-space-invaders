@@ -28,3 +28,5 @@ class Invader(Turtle):
             self.setx(self.xcor() + MOVE_DISTANCE)
         elif direction == Direction.LEFT:
             self.setx(self.xcor() - MOVE_DISTANCE)
+        elif direction == Direction.DOWN:
+            self.sety(self.ycor() - MOVE_DISTANCE)
