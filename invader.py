@@ -2,7 +2,6 @@ from turtle import Turtle
 
 from utils import Direction
 
-MOVE_DISTANCE = 20
 SHAPE = "assets/img/invader_frames/invader-1.gif"
 
 
@@ -10,6 +9,7 @@ class Invader(Turtle):
     def __init__(
         self,
         starting_position: tuple[int, int],
+        move_distance: int,
         shape=SHAPE,
         undobuffersize=1000,
         visible=True,
@@ -21,15 +21,16 @@ class Invader(Turtle):
         self.setheading(270)
         self.shapesize(stretch_wid=1, stretch_len=1)
         self.speed("fastest")
+        self.move_distance = move_distance
         self._bullets = []        
 
     def move(self, direction: Direction):
         if direction == Direction.RIGHT:
-            self.setx(self.xcor() + MOVE_DISTANCE)
+            self.setx(self.xcor() + self.move_distance)
         elif direction == Direction.LEFT:
-            self.setx(self.xcor() - MOVE_DISTANCE)
+            self.setx(self.xcor() - self.move_distance)
         elif direction == Direction.DOWN:
-            self.sety(self.ycor() - MOVE_DISTANCE)
+            self.sety(self.ycor() - self.move_distance)
     
     def change_shape(self):
         if self.shape() == "assets/img/invader_frames/invader-1.gif":

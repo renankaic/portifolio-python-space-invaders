@@ -24,6 +24,7 @@ class SpaceInvadersGame():
         self._invaders = []
         self._invaders_last_move = 0
         self._invaders_current_move_direction = Direction.RIGHT
+        self._invaders_move_distance = 15
 
         for invader_gif_filename in os.listdir('assets/img/invader_frames'):
           self._screen.register_shape(f'assets/img/invader_frames/{invader_gif_filename}')
@@ -43,7 +44,7 @@ class SpaceInvadersGame():
             self.move_invaders()
 
             # Change invader shape every 25 loops
-            if self._loop_count % 25 == 0:
+            if self._loop_count % 25 == 0 and self._invaders_count > 0:
                 for row in self._invaders:
                     for invader in row:
                         # Invader is hidden when it is hit by a bullet
@@ -51,11 +52,17 @@ class SpaceInvadersGame():
                           invader.change_shape()
                 self._loop_count = 0
 
+            if self._invaders_count == 0:
+                # Increase the move distance of the invaders and generate a new row of invaders (harder level)
+                self._invaders_move_distance += 5
+                self.generate_invaders(40)
+
             self._loop_count += 1
         
         self._screen.exitonclick()
     
     def generate_invaders(self, count: int):
+       self._invaders = []
        for n in range (count):
           if n < 10:
               start_position = (-330 + n * 50, 250)
@@ -69,7 +76,7 @@ class SpaceInvadersGame():
               n -= 30
               start_position = (-330 + n * 50, 100)
 
-          invader = Invader(starting_position=start_position)
+          invader = Invader(starting_position=start_position, move_distance=self._invaders_move_distance)
 
           # Create a new row of invaders every 10 invaders
           if len(self._invaders) <= n // 10:
@@ -125,7 +132,7 @@ class SpaceInvadersGame():
                 if invader is not None:
                   invader.move(self._invaders_current_move_direction)
 
-                  # Move invaders down if they reach the edge
+                  # Move invaders down if one of them reach the edge
                   if reached_edge:
                       invader.move(Direction.DOWN)
                 
