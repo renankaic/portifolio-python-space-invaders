@@ -1,4 +1,5 @@
 from turtle import Screen
+from scoreboard import Scoreboard
 from spaceship import Spaceship
 from invader import Invader
 import time
@@ -13,6 +14,8 @@ class SpaceInvadersGame():
         self._screen.bgcolor('black')
         self._screen.title('Space Invaders')                
         self._screen.tracer(0)
+
+        self._scoreboard = Scoreboard()
 
         self._screen.register_shape('spaceship.gif')
         self._spaceship = Spaceship(shape='spaceship.gif')
@@ -172,6 +175,7 @@ class SpaceInvadersGame():
                   del bullet
                   row[idx] = None
                   self._invaders_count -= 1
+                  self._scoreboard.increase_score()
                   break
                   
     def is_invader_in_area(self, invader: Invader, x_cor, y_cor):
