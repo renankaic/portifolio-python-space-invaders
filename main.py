@@ -125,16 +125,15 @@ class SpaceInvadersGame():
     
     def check_bullet_collision(self):
        for bullet in self._spaceship.bullets:
-          if bullet.ycor() > -100:
-             for row in self._invaders:
-                for idx, invader in enumerate(row):
-                    if invader is not None and self.is_invader_in_area(invader, bullet.xcor(), bullet.ycor()):
-                        invader.hideturtle()                        
-                        bullet.hideturtle()
-                        self._spaceship.bullets.remove(bullet)
-                        del bullet
-                        row[idx] = None
-                        break
+        for row in self._invaders:
+          for idx, invader in enumerate(row):
+              if invader is not None and self.is_invader_in_area(invader, bullet.xcor(), bullet.ycor()):
+                  invader.hideturtle()                        
+                  bullet.hideturtle()
+                  self._spaceship.bullets.remove(bullet)
+                  del bullet
+                  row[idx] = None
+                  break
               
     
     def is_invader_in_area(self, invader: Invader, x_cor, y_cor):
