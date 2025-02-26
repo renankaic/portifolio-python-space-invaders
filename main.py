@@ -28,7 +28,7 @@ class SpaceInvadersGame():
     def run(self):
         self._screen.listen()
         self._game_is_on = True
-        self._loop_count = 0
+        self._loop_count = 0 
 
         # Create 40 invaders        
         for n in range (40):
@@ -57,13 +57,16 @@ class SpaceInvadersGame():
             self._screen.update()
             time.sleep(0.025)  # Reduce sleep duration for smoother performance
             self._spaceship.move_bullets()
+            self.check_bullet_collision()
             self.move_invaders()
 
             # Change invader shape every 25 loops
             if self._loop_count % 25 == 0:
                 for row in self._invaders:
                     for invader in row:
-                        invader.change_shape()
+                        # Invader is hidden when it is hit by a bullet
+                        if invader is not None:
+                          invader.change_shape()
                 self._loop_count = 0
 
             self._loop_count += 1
@@ -109,16 +112,39 @@ class SpaceInvadersGame():
 
             for row in self._invaders:
                 for invader in row:
-                    invader.move(self._invaders_current_move_direction)
+                    if invader is not None:
+                      invader.move(self._invaders_current_move_direction)
 
-                    # Move invaders down if they reach the edge
-                    if reached_edge:
-                        invader.move(Direction.DOWN)
+                      # Move invaders down if they reach the edge
+                      if reached_edge:
+                          invader.move(Direction.DOWN)
                 
             self._invaders_last_move = 0
         else:
             self._invaders_last_move += 1
-
+    
+    def check_bullet_collision(self):
+       for bullet in self._spaceship.bullets:
+          if bullet.ycor() > -100:
+             for row in self._invaders:
+                for idx, invader in enumerate(row):
+                    if invader is not None and self.is_invader_in_area(invader, bullet.xcor(), bullet.ycor()):
+                        invader.hideturtle()                        
+                        bullet.hideturtle()
+                        self._spaceship.bullets.remove(bullet)
+                        del bullet
+                        row[idx] = None
+                        break
+              
+    
+    def is_invader_in_area(self, invader: Invader, x_cor, y_cor):
+        invader_x_cor = invader.xcor()
+        invader_y_cor = invader.ycor()
+        
+        # Check if the bullet is in the invader's area
+        # The invader's are is a rectangle with width 37 and height 32
+        return (invader_x_cor - 18) <= x_cor <= (invader_x_cor + 18) and (invader_y_cor - 16) <= y_cor <= (invader_y_cor + 16)
+            
 
 if __name__ == '__main__':
     space_invaders = SpaceInvadersGame()
