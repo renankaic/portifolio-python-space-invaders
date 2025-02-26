@@ -62,29 +62,30 @@ class SpaceInvadersGame():
         self._screen.exitonclick()
     
     def generate_invaders(self, count: int):
-       self._invaders = []
-       for n in range (count):
-          if n < 10:
-              start_position = (-330 + n * 50, 250)
-          elif n < 20:
-              n -= 10
-              start_position = (-330 + n * 50, 200)
-          elif n < 30:
-              n -= 20
-              start_position = (-330 + n * 50, 150)
-          else:
-              n -= 30
-              start_position = (-330 + n * 50, 100)
+      self._invaders = []
+      for n in range (count):
+        if n < 10:
+            start_position = (-330 + n * 50, 250)
+        elif n < 20:
+            n -= 10
+            start_position = (-330 + n * 50, 200)
+        elif n < 30:
+            n -= 20
+            start_position = (-330 + n * 50, 150)
+        else:
+            n -= 30
+            start_position = (-330 + n * 50, 100)
 
-          invader = Invader(starting_position=start_position, move_distance=self._invaders_move_distance)
+        invader = Invader(starting_position=start_position, move_distance=self._invaders_move_distance)
 
-          # Create a new row of invaders every 10 invaders
-          if len(self._invaders) <= n // 10:
-              self._invaders.append([])
+        # Create a new row of invaders every 10 invaders
+        if len(self._invaders) <= n // 10:
+            self._invaders.append([])
 
-          # Add the invader to the last row
-          self._invaders[n // 10].append(invader)
-          self._invaders_count += 1
+        # Add the invader to the last row
+        self._invaders[n // 10].append(invader)
+        self._invaders_count += 1
+      self._invaders_last_move = 0
    
     def set_keys_listeners(self):        
         self._screen.listen()
