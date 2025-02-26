@@ -29,6 +29,7 @@ class SpaceInvadersGame():
         self._screen.listen()
         self._game_is_on = True
         self._loop_count = 0 
+        self._invaders_count = 0
 
         # Create 40 invaders        
         for n in range (40):
@@ -52,6 +53,7 @@ class SpaceInvadersGame():
 
             # Add the invader to the last row
             self._invaders[n // 10].append(invader)
+            self._invaders_count += 1
         
         while self._game_is_on:
             self._screen.update()
@@ -82,48 +84,83 @@ class SpaceInvadersGame():
         self._screen.onkeypress(self._spaceship.shoot, "space")
 
     def move_invaders(self):
-        if self._invaders_last_move == 10:
-            row_with_last_invader = None
+        if self._invaders_last_move == 10 and self._invaders_count > 0:
+            invader_in_the_edge = None
             reached_edge = False
 
             if self._invaders_current_move_direction == Direction.RIGHT:
               # Check if the last invader in the row is at the right edge of the screen
               for row in self._invaders:
                 if row[-1] is not None:
-                    row_with_last_invader = row
+                    invader_in_the_edge = row[-1]
                     break
                             
-              if row_with_last_invader is not None:
-                if row_with_last_invader[-1].xcor() >= 380:
-                  self._invaders_current_move_direction = Direction.LEFT
-                  reached_edge = True
+              if invader_in_the_edge is None:
+                invader_in_the_edge = self.get_invader_in_edge()
+
+              if invader_in_the_edge.xcor() >= 380:
+                self._invaders_current_move_direction = Direction.LEFT
+                reached_edge = True
 
             elif self._invaders_current_move_direction == Direction.LEFT:
               # Check if the last invader in the row is at the left edge of the screen
               for row in self._invaders:
                 if row[0] is not None:
-                    row_with_last_invader = row
+                    invader_in_the_edge = row[0]
                     break
                             
-              if row_with_last_invader is not None:
-                if row_with_last_invader[0].xcor() <= -380:
-                  self._invaders_current_move_direction = Direction.RIGHT
-                  reached_edge = True
+              if invader_in_the_edge is None:
+                invader_in_the_edge = self.get_invader_in_edge()
+
+              if invader_in_the_edge.xcor() <= -380:
+                self._invaders_current_move_direction = Direction.RIGHT
+                reached_edge = True
 
             for row in self._invaders:
-                for invader in row:
-                    if invader is not None:
-                      invader.move(self._invaders_current_move_direction)
+              for invader in row:
+                if invader is not None:
+                  invader.move(self._invaders_current_move_direction)
 
-                      # Move invaders down if they reach the edge
-                      if reached_edge:
-                          invader.move(Direction.DOWN)
+                  # Move invaders down if they reach the edge
+                  if reached_edge:
+                      invader.move(Direction.DOWN)
                 
             self._invaders_last_move = 0
         else:
             self._invaders_last_move += 1
-    
+
+    def get_invader_in_edge(self):
+      edge_invader_row = None
+      edge_invader_idx = None
+
+      if self._invaders_count == 0:
+        return None
+
+      if self._invaders_current_move_direction == Direction.RIGHT:
+        max_x_cor = -800
+
+        for row_idx, row in enumerate(self._invaders):
+          for invader_idx, invader in enumerate(row):
+              if invader is not None and invader.xcor() > max_x_cor:
+                max_x_cor = invader.xcor()
+                edge_invader_row = row_idx
+                edge_invader_idx = invader_idx
+      
+      elif self._invaders_current_move_direction == Direction.LEFT:
+        min_x_cor = 800
+        for row_idx, row in enumerate(self._invaders):
+          for invader_idx, invader in enumerate(row):
+              if invader is not None and invader.xcor() < min_x_cor:
+                min_x_cor = invader.xcor()
+                edge_invader_row = row_idx
+                edge_invader_idx = invader_idx
+      
+      return self._invaders[edge_invader_row][edge_invader_idx]
+
     def check_bullet_collision(self):
+       if self._invaders_count == 0:
+          return
+       
        for bullet in self._spaceship.bullets:
         for row in self._invaders:
           for idx, invader in enumerate(row):
@@ -133,9 +170,9 @@ class SpaceInvadersGame():
                   self._spaceship.bullets.remove(bullet)
                   del bullet
                   row[idx] = None
+                  self._invaders_count -= 1
                   break
-              
-    
+                  
     def is_invader_in_area(self, invader: Invader, x_cor, y_cor):
         invader_x_cor = invader.xcor()
         invader_y_cor = invader.ycor()
