@@ -30,31 +30,8 @@ class SpaceInvadersGame():
         self._game_is_on = True
         self._loop_count = 0 
         self._invaders_count = 0
-
-        # Create 40 invaders        
-        for n in range (40):
-            if n < 10:
-                start_position = (-330 + n * 50, 250)
-            elif n < 20:
-                n -= 10
-                start_position = (-330 + n * 50, 200)
-            elif n < 30:
-                n -= 20
-                start_position = (-330 + n * 50, 150)
-            else:
-                n -= 30
-                start_position = (-330 + n * 50, 100)
-
-            invader = Invader(starting_position=start_position)
-
-            # Create a new row of invaders every 10 invaders
-            if len(self._invaders) <= n // 10:
-                self._invaders.append([])
-
-            # Add the invader to the last row
-            self._invaders[n // 10].append(invader)
-            self._invaders_count += 1
-        
+        self.generate_invaders(40)          
+                
         while self._game_is_on:
             self._screen.update()
             time.sleep(0.025)  # Reduce sleep duration for smoother performance
@@ -74,6 +51,30 @@ class SpaceInvadersGame():
             self._loop_count += 1
         
         self._screen.exitonclick()
+    
+    def generate_invaders(self, count: int):
+       for n in range (count):
+          if n < 10:
+              start_position = (-330 + n * 50, 250)
+          elif n < 20:
+              n -= 10
+              start_position = (-330 + n * 50, 200)
+          elif n < 30:
+              n -= 20
+              start_position = (-330 + n * 50, 150)
+          else:
+              n -= 30
+              start_position = (-330 + n * 50, 100)
+
+          invader = Invader(starting_position=start_position)
+
+          # Create a new row of invaders every 10 invaders
+          if len(self._invaders) <= n // 10:
+              self._invaders.append([])
+
+          # Add the invader to the last row
+          self._invaders[n // 10].append(invader)
+          self._invaders_count += 1
    
     def set_keys_listeners(self):        
         self._screen.listen()
