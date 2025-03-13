@@ -122,5 +122,5 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
-__pycache__/*.pyc
+__pycache__/
 
